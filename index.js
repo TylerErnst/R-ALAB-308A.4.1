@@ -1,5 +1,6 @@
 import * as Carousel from "./Carousel.js";
-import axios from "axios";
+// import axios from "axios";
+import * as axios from "https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js";
 
 // The breed selection input element.
 const breedSelect = document.getElementById("breedSelect");
@@ -11,7 +12,7 @@ const progressBar = document.getElementById("progressBar");
 const getFavouritesBtn = document.getElementById("getFavouritesBtn");
 
 // Step 0: Store your API key here for reference and easy access.
-const API_KEY = "";
+const API_KEY = "live_emZXn4x5IT3vE3DxfEyB4RmT3Uy3y4sd1E4KSnYlw8Iy92u84oOBax51uLXgasOV";
 
 /**
  * 1. Create an async function "initialLoad" that does the following:
@@ -21,6 +22,24 @@ const API_KEY = "";
  *  - Each option should display text equal to the name of the breed.
  * This function should execute immediately.
  */
+
+async function initialLoad() {
+  let response = await fetch('https://api.thecatapi.com/v1/breeds/' ) 
+  let breeds = await response.json();
+
+  console.log(breeds)
+
+  breeds.forEach((breed) => {
+    const opt = document.createElement("option");
+    opt.value = breed.id;
+    opt.textContent = breed.name;
+
+    breedSelect.appendChild(opt);
+  });
+}
+
+initialLoad();
+
 
 /**
  * 2. Create an event handler for breedSelect that does the following:
@@ -36,6 +55,35 @@ const API_KEY = "";
  * - Each new selection should clear, re-populate, and restart the Carousel.
  * - Add a call to this function to the end of your initialLoad function above to create the initial carousel.
  */
+
+breedSelect.addEventListener("change", async (event) => {
+  console.log('event',event.target.value)
+  let response = await fetch(`https://api.thecatapi.com/v1/images/search?limit=25&breed_ids=${event.target.value}&api_key=${API_KEY}`); 
+  // let response = await fetch(`https://api.thecatapi.com/v1/images/search?limit=25&breed_ids=beng&api_key=${API_KEY}`);
+  let pictures = await response.json();
+  console.log('pictures', pictures);
+
+  pictures.forEach(picture => {
+    let element = Carousel.createCarouselItem(
+      picture.url,
+      event.target.value,
+      picture.id
+    )
+    Carousel.appendCarousel(element);
+  });
+  infoDump.innerHTML = response.description;
+});
+
+//export function createCarouselItem(imgSrc, imgAlt, imgId)
+//https://api.thecatapi.com/v1/images/search?limit=10&breed_ids=${event.target.value}&api_key=API_KEY
+
+// <!-- Information Section -->
+//     <div
+//       id="infoDump"
+//       class="px-5 py-3 mx-auto"
+//       style="max-width: 1600px;"
+//     ></div>
+
 
 /**
  * 3. Fork your own sandbox, creating a new one named "JavaScript Axios Lab."
