@@ -1,5 +1,5 @@
 // import * as bootstrap from "bootstrap";
-import * as bootstrap from "https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js";
+// import * as bootstrap from "https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js";
 import { favourite } from "./index.js";
 
 export function createCarouselItem(imgSrc, imgAlt, imgId) {
